@@ -7,7 +7,10 @@ User = get_user_model()
 
 
 class UserSerializer(serializers.ModelSerializer):
-    posts = serializers.StringRelatedField(many=True, read_only=True)
+    posts = serializers.SlugRelatedField(
+        many=True,
+        read_only=True,
+        slug_field='username')
 
     class Meta:
         model = User
@@ -16,11 +19,14 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 class CommentSerializer(serializers.ModelSerializer):
-    author = serializers.StringRelatedField(read_only=True)
+    author = serializers.SlugRelatedField(
+        read_only=True,
+        slug_field='username',
+        required=False)
 
     class Meta:
         model = Comment
-        fields = ('id', 'author', 'post', 'text', 'created')
+        fields = '__all__'
         read_only_fields = ('author', 'post', 'created')
 
 
@@ -47,9 +53,10 @@ class PostSerializer(serializers.ModelSerializer):
 
 
 class GroupSerializer(serializers.ModelSerializer):
-    posts = serializers.StringRelatedField(
+    posts = serializers.SlugRelatedField(
         many=True,
-        read_only=True)
+        read_only=True,
+        slug_field='group')
 
     class Meta:
         model = Group
